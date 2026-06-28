@@ -1,0 +1,73 @@
+# Unity folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+.utmp/
+
+# Blender backup files
+*.blend1
+*.blend1.meta
+
+# Memory / recordings
+[Mm]emoryCaptures/
+[Rr]ecordings/
+
+# OS / IDE
+.vs/
+.vscode/
+.gradle/
+
+# JetBrains
+/[Aa]ssets/Plugins/Editor/JetBrains*
+*.DotSettings.user
+
+# Visual Studio / project files
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# C# Dev Kit cache
+*.lscache
+**/*.lscache
+
+# Logs
+*.log
+sysinfo.txt
+mono_crash.*
+
+# Builds
+*.apk
+*.aab
+*.app
+*.unitypackage
+
+# Unity auto-generated files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Addressables
+/ServerData/
+/[Aa]ssets/StreamingAssets/aa*
+/[Aa]ssets/Addressables_Temp*/
+
+# TestRunner
+InitTestScene*.unity*
+
+# Visual Scripting
+/[Aa]ssets/Unity.VisualScripting.Generated/
