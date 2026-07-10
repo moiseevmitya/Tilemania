@@ -81,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 251802295
-  m_SortingLayer: 7
+  m_SortingLayer: 9
   m_SortingOrder: -1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 4164114644789108382, guid: 9b97cb51dbb3888458a4b0924e44f6cd, type: 3}
@@ -169,3 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 047899be33813f14d9c22be1c513b36b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  bulletSpeed: 20
+  scoreForPinkEnemy: 100
+  scoreForYellowEnemy: 150
+  enemyDeathSound: {fileID: 8300000, guid: 6685740b1f0bf1a4d824bc21cc43bc35, type: 3}

@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +14,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Vector2 deathKick = new Vector2(10f, 20f);
     [SerializeField] Transform gun;
     [SerializeField] GameObject bullet;
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] AudioClip stepsSound, jumpSound, deathSound, attackSound;
      
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
@@ -24,11 +27,15 @@ public class PlayerMovement : MonoBehaviour
     bool isTouchingGround;
     bool isAlive = true;
     bool attackReady = true;
+    bool isPaused;
     
     
     
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myBodyCollider = GetComponent<CapsuleCollider2D>();
@@ -39,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(!isAlive) return;
+        if(!isAlive || isPaused) return;
         
         // проверка контакта с землей
         isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
@@ -69,6 +76,7 @@ public class PlayerMovement : MonoBehaviour
         if(value.isPressed && isTouchingGround)
         {
             myRigidbody.linearVelocity += new Vector2(0f, jumpSpeed * waterMovementMultiplier);
+            AudioSettings.instance.PlaySoundEffect(jumpSound);
         }
     }
 
@@ -80,6 +88,14 @@ public class PlayerMovement : MonoBehaviour
         {
             // запуск корутины для ограничение стрельбы по времени
             StartCoroutine(TryAttack());
+        }
+    }
+
+    void OnPause(InputValue value)
+    {
+        if(value.isPressed)
+        {
+            SwitchPauseGame();
         }
     }
 
@@ -97,6 +113,14 @@ public class PlayerMovement : MonoBehaviour
         } else
         {
             myAnimator.SetBool("isRunning", false);
+        }
+
+        if(hasHorizontalSpeed && isTouchingGround)
+        {
+            if(!AudioSettings.instance.soundEffectsAudio.isPlaying)
+            {
+                AudioSettings.instance.PlaySoundEffect(stepsSound);
+            }
         }
         
     }
@@ -138,7 +162,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            
             myAnimator.speed = 1;
         }
     }
@@ -180,6 +203,7 @@ public class PlayerMovement : MonoBehaviour
             isAlive = false;
             myAnimator.SetTrigger("Dying");
             myRigidbody.linearVelocity = deathKick;
+            AudioSettings.instance.PlaySoundEffect(deathSound);
             FindAnyObjectByType<GameSession>().ProcessPlayerDeath();
         }
     }
@@ -191,9 +215,16 @@ public class PlayerMovement : MonoBehaviour
         {
             attackReady = false;
             Instantiate(bullet, gun.position, gun.rotation);
+            AudioSettings.instance.PlaySoundEffect(attackSound);
             yield return new WaitForSeconds(firingDelay);
             attackReady = true;
         }
+    }
+
+    private void SwitchPauseGame()
+    {
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+        isPaused = pauseMenu.activeSelf;
     }
 
 

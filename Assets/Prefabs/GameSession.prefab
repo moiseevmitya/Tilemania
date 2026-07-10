@@ -46,8 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameSession
   playerLives: 3
+  playerScore: 0
   livesText: {fileID: 2796461407421111054}
   scoreText: {fileID: 6552512215949995678}
+  gameMusic: {fileID: 8300000, guid: 5285989fc14d5fe44b8397cb4c0a0fb7, type: 3}
 --- !u!1 &3830503492109787673
 GameObject:
   m_ObjectHideFlags: 0

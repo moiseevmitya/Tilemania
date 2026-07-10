@@ -60,6 +60,11 @@ MonoBehaviour:
   deathKick: {x: -2, y: 10}
   gun: {fileID: 4931911031272511467}
   bullet: {fileID: 1958205041133902978, guid: 03059c1338280fa4f85a1118f6830b00, type: 3}
+  pauseMenu: {fileID: 0}
+  stepsSound: {fileID: 8300000, guid: 4eec4ae764b37a642817f9022a30ca3d, type: 3}
+  jumpSound: {fileID: 8300000, guid: 71dbcaf460f026c49a959b13f103c699, type: 3}
+  deathSound: {fileID: 8300000, guid: 424a0b1e7b754304896c1f864e4ad94f, type: 3}
+  attackSound: {fileID: 8300000, guid: 5697b2400d6e82e4eb57a01d3e803568, type: 3}
 --- !u!212 &1226294129814368903
 SpriteRenderer:
   serializedVersion: 2

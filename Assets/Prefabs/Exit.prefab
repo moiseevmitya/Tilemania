@@ -152,3 +152,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelExit
   levelLoadDelay: 0.5
+  exitSound: {fileID: 8300000, guid: 1395559d9f95f074899a8a11f2d5aa52, type: 3}

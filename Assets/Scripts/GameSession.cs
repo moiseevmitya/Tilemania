@@ -9,6 +9,7 @@ public class GameSession : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI livesText;
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] AudioClip gameMusic;
      
     void Awake()
     {
@@ -30,6 +31,9 @@ public class GameSession : MonoBehaviour
     {
         livesText.text = playerLives.ToString();
         scoreText.text = playerScore.ToString();
+
+        // Замена трека на игровую музыку + проверка, чтобы не перезапускать музыку
+        AudioSettings.instance.SetAndPlayMusic(gameMusic);
     }
 
     public void ProcessPlayerDeath()
@@ -71,6 +75,11 @@ public class GameSession : MonoBehaviour
     {
         playerScore += score;
         scoreText.text = playerScore.ToString();
+    }
+
+    public int GetPlayerScore()
+    {
+        return playerScore;
     }
     
 }

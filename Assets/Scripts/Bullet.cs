@@ -3,6 +3,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] float bulletSpeed = 20f;
+    [SerializeField] int scoreForPinkEnemy = 100;
+    [SerializeField] int scoreForYellowEnemy = 150;
+    [SerializeField] AudioClip enemyDeathSound;
     Rigidbody2D myRigidbody;
     PlayerMovement player;
     float xSpeed;
@@ -26,13 +29,13 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // проверка на попадание во врага
-        if(other.CompareTag("Enemy"))
+        if(other.CompareTag("EnemyPink"))
         {
-            Animator enemyAnimator = other.GetComponent<Animator>();
-            // запуск анимации сметри + проверка на налицие аниматора
-            enemyAnimator?.SetTrigger("EnemyDying");
-            // удаляем врага
-            Destroy(other.gameObject, 0.15f);
+            CallEnemyDeath(other.gameObject, scoreForPinkEnemy);
+        }
+        else if(other.CompareTag("EnemyYellow"))
+        {
+            CallEnemyDeath(other.gameObject, scoreForYellowEnemy);
         }
         Destroy(gameObject);
     }
@@ -41,5 +44,19 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         Destroy(gameObject, 1f);
+    }
+
+    private void CallEnemyDeath(GameObject enemy, int score)
+    {
+        Animator enemyAnimator = enemy.GetComponent<Animator>();
+        // запуск анимации сметри + проверка на налицие аниматора
+        enemyAnimator?.SetTrigger("EnemyDying");
+
+        AudioSettings.instance.PlaySoundEffect(enemyDeathSound);
+
+        // удаляем врага
+        Destroy(enemy.gameObject, 0.15f);
+        // начисляем очки за убийство
+        FindAnyObjectByType<GameSession>().AddPlayerScore(score);
     }
 }

@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyYellowVariant
       objectReference: {fileID: 0}
+    - target: {fileID: 2986797795725787547, guid: 65d45805ea04d7d4ca9951d4bf4cf588, type: 3}
+      propertyPath: m_TagString
+      value: EnemyYellow
+      objectReference: {fileID: 0}
     - target: {fileID: 5566011573750024492, guid: 65d45805ea04d7d4ca9951d4bf4cf588, type: 3}
       propertyPath: m_Sprite
       value: 
