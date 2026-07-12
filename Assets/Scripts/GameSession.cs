@@ -60,12 +60,12 @@ public class GameSession : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex);
     }
 
-    void ResetGameSession()
+    public void ResetGameSession()
     {
         // сбрасываем обьект ScenePersist
         FindAnyObjectByType<ScenePersist>().ResetScenePersist();
         // загрузка стартовой сцены
-        SceneManager.LoadScene(0);
+        SceneManager.LoadSceneAsync("MainMenu");
         // уничтожение текущей игровой сессии
         Destroy(gameObject);
     }

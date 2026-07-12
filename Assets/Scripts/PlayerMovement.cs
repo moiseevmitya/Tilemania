@@ -46,7 +46,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(!isAlive || isPaused) return;
+        if(!isAlive) return;
+
+        isPaused = pauseMenu.activeSelf;
         
         // проверка контакта с землей
         isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
@@ -54,6 +56,8 @@ public class PlayerMovement : MonoBehaviour
         bool isTouchingLadder = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ladder"));
         // проверка контанта с водой
         bool isTouchingWater = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Water"));
+
+        if(isPaused) return;
         
         Run();
         FlipSprite();
@@ -64,14 +68,14 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        if(!isAlive) return;
+        if(!isAlive || isPaused) return;
         // чтения ввода движения
         moveInput = value.Get<Vector2>();
     }
 
     void OnJump(InputValue value)
     {
-        if(!isAlive) return;
+        if(!isAlive || isPaused) return;
         // проверка на нажатие кнопки и контакт с землей
         if(value.isPressed && isTouchingGround)
         {
@@ -82,7 +86,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
-        if(!isAlive || !canAttack) return;
+        if(!isAlive || !canAttack || isPaused) return;
         // запуск атаки при нажатии
         if(value.isPressed)
         {
@@ -224,7 +228,6 @@ public class PlayerMovement : MonoBehaviour
     private void SwitchPauseGame()
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
-        isPaused = pauseMenu.activeSelf;
     }
 
 

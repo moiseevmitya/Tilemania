@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    [SerializeField] AudioClip openSound, closeSound;
+    [SerializeField] AudioClip openSound;
 
     void OnEnable()
     {
@@ -22,19 +22,21 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1f;
         GameSession gameSession = FindAnyObjectByType<GameSession>();
-        Destroy(gameSession.gameObject);
-        SceneManager.LoadScene("MainMenu");
+        gameSession.ResetGameSession();
+        ShowCursor();
     }
 
     public void Resume()
     {
         Time.timeScale = 1f;
+        HideCursor();
         transform.parent.gameObject.SetActive(false);
     }
 
     public void RestartLevel()
     {
         Time.timeScale = 1f;
+        HideCursor();
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
     }
 
