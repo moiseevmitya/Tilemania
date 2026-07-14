@@ -1,21 +1,19 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float climbSpeed = 5f;
-    [SerializeField] float jumpSpeed = 13f;
-    [SerializeField] float firingDelay = 0.75f;
-    [SerializeField] [Range(0f, 1f)] float waterMovementMultiplier  = 0.6f;
-    [SerializeField] bool canAttack = true;
-    [SerializeField] Vector2 deathKick = new Vector2(10f, 20f);
-    [SerializeField] Transform gun;
-    [SerializeField] GameObject bullet;
-    [SerializeField] GameObject pauseMenu;
-    [SerializeField] AudioClip stepsSound, jumpSound, deathSound, attackSound;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float climbSpeed = 5f;
+    [SerializeField] private float jumpSpeed = 13f;
+    [SerializeField] private float firingDelay = 0.75f;
+    [SerializeField] [Range(0f, 1f)] private float waterMovementMultiplier  = 0.6f;
+    [SerializeField] private bool canAttack = true;
+    [SerializeField] private Vector2 deathKick = new Vector2(10f, 20f);
+    [SerializeField] private Transform gun;
+    [SerializeField] private GameObject bullet;
+    [SerializeField] private AudioClip stepsSound, jumpSound, deathSound, attackSound;
      
     Vector2 moveInput;
     Rigidbody2D myRigidbody;
@@ -27,14 +25,12 @@ public class PlayerMovement : MonoBehaviour
     bool isTouchingGround;
     bool isAlive = true;
     bool attackReady = true;
-    bool isPaused;
     
     
     
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        CursorController.Hide();
 
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
@@ -46,9 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(!isAlive) return;
-
-        isPaused = pauseMenu.activeSelf;
+        if(!isAlive || PauseMenu.isPaused) return;
         
         // проверка контакта с землей
         isTouchingGround = myFeetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
@@ -56,8 +50,6 @@ public class PlayerMovement : MonoBehaviour
         bool isTouchingLadder = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ladder"));
         // проверка контанта с водой
         bool isTouchingWater = myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Water"));
-
-        if(isPaused) return;
         
         Run();
         FlipSprite();
@@ -68,14 +60,18 @@ public class PlayerMovement : MonoBehaviour
 
     void OnMove(InputValue value)
     {
-        if(!isAlive || isPaused) return;
+        if(!isAlive || PauseMenu.isPaused)
+        {
+            moveInput = Vector2.zero;
+            return;
+        }
         // чтения ввода движения
         moveInput = value.Get<Vector2>();
     }
 
     void OnJump(InputValue value)
     {
-        if(!isAlive || isPaused) return;
+        if(!isAlive || PauseMenu.isPaused) return;
         // проверка на нажатие кнопки и контакт с землей
         if(value.isPressed && isTouchingGround)
         {
@@ -86,20 +82,12 @@ public class PlayerMovement : MonoBehaviour
 
     void OnAttack(InputValue value)
     {
-        if(!isAlive || !canAttack || isPaused) return;
+        if(!isAlive || !canAttack || PauseMenu.isPaused) return;
         // запуск атаки при нажатии
         if(value.isPressed)
         {
             // запуск корутины для ограничение стрельбы по времени
             StartCoroutine(TryAttack());
-        }
-    }
-
-    void OnPause(InputValue value)
-    {
-        if(value.isPressed)
-        {
-            SwitchPauseGame();
         }
     }
 
@@ -119,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
             myAnimator.SetBool("isRunning", false);
         }
 
-        if(hasHorizontalSpeed && isTouchingGround)
+        if(hasHorizontalSpeed && isTouchingGround && !AudioSettings.instance.IsSoundEffectPlaying)
         {
             if(!AudioSettings.instance.soundEffectsAudio.isPlaying)
             {
@@ -223,11 +211,6 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForSeconds(firingDelay);
             attackReady = true;
         }
-    }
-
-    private void SwitchPauseGame()
-    {
-        pauseMenu.SetActive(!pauseMenu.activeSelf);
     }
 
 

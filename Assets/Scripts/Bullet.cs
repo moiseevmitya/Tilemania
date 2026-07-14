@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] float bulletSpeed = 20f;
-    [SerializeField] int scoreForPinkEnemy = 100;
-    [SerializeField] int scoreForYellowEnemy = 150;
-    [SerializeField] AudioClip enemyDeathSound;
+    [SerializeField] private float bulletSpeed = 20f;
+    [SerializeField] private int scoreForPinkEnemy = 100;
+    [SerializeField] private int scoreForYellowEnemy = 150;
+    [SerializeField] private AudioClip enemyDeathSound;
     Rigidbody2D myRigidbody;
     PlayerMovement player;
     float xSpeed;

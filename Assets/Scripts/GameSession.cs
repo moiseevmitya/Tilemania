@@ -4,27 +4,27 @@ using UnityEngine.SceneManagement;
 
 public class GameSession : MonoBehaviour
 {
-    [SerializeField] int playerLives = 3;
-    [SerializeField] int playerScore = 0;
+    [SerializeField] private int playerLives = 3;
+    [SerializeField] private int playerScore = 0;
 
-    [SerializeField] TextMeshProUGUI livesText;
-    [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] AudioClip gameMusic;
+    [SerializeField] private TextMeshProUGUI livesText;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private AudioClip gameMusic;
      
     void Awake()
     {
         // проверка на количество GameSession в сцене
         int numberGameSessions = FindObjectsByType<GameSession>(FindObjectsSortMode.None).Length;
+
         // если больше одного - удаляем дубликат
         if(numberGameSessions > 1)
         {
             Destroy(gameObject);
+            return;
         }
-        else
-        {
-            // если один - сохранияем между сценами
-            DontDestroyOnLoad(gameObject);
-        }
+
+        // если один - сохранияем между сценами
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -41,11 +41,11 @@ public class GameSession : MonoBehaviour
         // если жизней больше 1 - перезапускаем сцену, если нет - полностью сбрасываем игру
         if(playerLives > 1)
         {
-            Invoke("TakeLife", 1f);
+            Invoke(nameof(TakeLife), 1f);
         }
         else
         {
-            Invoke("ResetGameSession", 1f);
+            Invoke(nameof(ResetGameSession), 1f);
         }
     }
 
@@ -62,10 +62,14 @@ public class GameSession : MonoBehaviour
 
     public void ResetGameSession()
     {
+        Time.timeScale = 1f;
         // сбрасываем обьект ScenePersist
-        FindAnyObjectByType<ScenePersist>().ResetScenePersist();
+        ScenePersist scenePersist = FindAnyObjectByType<ScenePersist>();
+        scenePersist?.ResetScenePersist();
+
         // загрузка стартовой сцены
         SceneManager.LoadSceneAsync("MainMenu");
+
         // уничтожение текущей игровой сессии
         Destroy(gameObject);
     }

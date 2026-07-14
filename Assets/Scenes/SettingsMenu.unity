@@ -5247,7 +5247,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1529565138}
         m_TargetAssemblyTypeName: SettingsPanel, Assembly-CSharp
-        m_MethodName: SetResolutions
+        m_MethodName: SetResolution
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5933,7 +5933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPanel
   resolutionDropdown: {fileID: 1186608967}
   qualityDropdown: {fileID: 401152345}
-  fullscreenTogle: {fileID: 1220240210}
+  fullscreenToggle: {fileID: 1220240210}
   musicSlider: {fileID: 1143846346}
   soundEffectsSlider: {fileID: 1348660548}
 --- !u!1001 &1539511426

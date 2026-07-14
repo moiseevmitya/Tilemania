@@ -8,7 +8,7 @@ public class SettingsPanel : MonoBehaviour
 {
     public TMP_Dropdown resolutionDropdown;
     public TMP_Dropdown qualityDropdown;
-    public Toggle fullscreenTogle;
+    public Toggle fullscreenToggle;
     public Slider musicSlider, soundEffectsSlider;
     private int currentResolutionIndex;
     private int currentQualityIndex;
@@ -21,17 +21,21 @@ public class SettingsPanel : MonoBehaviour
     List<Vector2Int> commonResolutions = new List<Vector2Int>()
     {
         new Vector2Int(1280, 720),
+        new Vector2Int(1366, 768),
+        new Vector2Int(1600, 900),
         new Vector2Int(1920, 1080),
         new Vector2Int(2560, 1440),
         new Vector2Int(3840, 2160)
     };
     
     
+    private void OnEnable()
+    {
+        CursorController.Show();
+    }
+    
     void Start()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        
         currentMusicFloat = AudioSettings.instance.musicFloat;
         currentSoundEffectsFloat = AudioSettings.instance.soundEffectsFloat;
         
@@ -45,6 +49,14 @@ public class SettingsPanel : MonoBehaviour
 
         // Нужен для удаления дубликатов разрешений с разной частотой обновления
         HashSet<string> seen = new HashSet<string>();
+
+        Vector2Int currentResolution = new Vector2Int(Screen.width, Screen.height);
+
+        // Добавляем наше текущее разрешение в список, если его там нет
+        if (!commonResolutions.Contains(currentResolution))
+        {
+            commonResolutions.Add(currentResolution);
+        }
 
         
         foreach (Resolution res in resolutions)
@@ -80,7 +92,7 @@ public class SettingsPanel : MonoBehaviour
     }
 
 
-    public void SetResolutions(int resolutionIndex)
+    public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
@@ -104,9 +116,11 @@ public class SettingsPanel : MonoBehaviour
 
     public void SaveSettings()
     {
+        Resolution selectedResolution = resolutions[resolutionDropdown.value];
+        PlayerPrefs.SetInt(PrefsKeys.ResolutionWidth, selectedResolution.width);
+        PlayerPrefs.SetInt(PrefsKeys.ResolutionHeight, selectedResolution.height);
+        
         PlayerPrefs.SetInt(PrefsKeys.Quality, qualityDropdown.value);
-        PlayerPrefs.SetInt(PrefsKeys.ResolutionWidth, Screen.width);
-        PlayerPrefs.SetInt(PrefsKeys.ResolutionHeight, Screen.height);
         PlayerPrefs.SetInt(PrefsKeys.Fullscreen, System.Convert.ToInt32(Screen.fullScreen));
         PlayerPrefs.SetFloat(PrefsKeys.MusicVolume, musicSlider.value);
         PlayerPrefs.SetFloat(PrefsKeys.SoundEffectsVolume, soundEffectsSlider.value);
@@ -127,7 +141,7 @@ public class SettingsPanel : MonoBehaviour
 
         if(resolutionDropdown.value != currentResolutionIndex)
         {
-            SetResolutions(currentResolutionIndex);
+            SetResolution(currentResolutionIndex);
         }
 
         if(qualityDropdown.value != currentQualityIndex)
@@ -146,8 +160,8 @@ public class SettingsPanel : MonoBehaviour
         }
 
         
-        
-        SceneManager.LoadScene("MainMenu");
+        CursorController.Show();
+        SceneManager.LoadSceneAsync("MainMenu");
     }
 
     // Обновление UI элементов на текущие значения настроек
@@ -155,7 +169,7 @@ public class SettingsPanel : MonoBehaviour
     {
         qualityDropdown.value = currentQualityIndex;
         resolutionDropdown.value = currentResolutionIndex;
-        fullscreenTogle.SetIsOnWithoutNotify(isFullscreen);
+        fullscreenToggle.SetIsOnWithoutNotify(isFullscreen);
         musicSlider.value = currentMusicFloat;
         soundEffectsSlider.value = currentSoundEffectsFloat;
     }

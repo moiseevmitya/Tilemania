@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CoinPickup : MonoBehaviour
 {
-    [SerializeField] AudioClip coinPickupSFX;
-    [SerializeField] int coinScore = 100;
+    [SerializeField] private AudioClip coinPickupSFX;
+    [SerializeField] private int coinScore = 100;
     
     // защита от повторного подбора
     bool wasCollected = false;
@@ -16,7 +16,6 @@ public class CoinPickup : MonoBehaviour
             FindAnyObjectByType<GameSession>().AddPlayerScore(coinScore);
             wasCollected = true;
             AudioSettings.instance.PlaySoundEffect(coinPickupSFX);
-            gameObject.SetActive(false);
             Destroy(gameObject);
         }
     }

@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using UnityEngine;
 
 public class AudioSettings : MonoBehaviour
@@ -8,6 +7,7 @@ public class AudioSettings : MonoBehaviour
     public AudioSource soundEffectsAudio;
     public float musicFloat { get; private set; }
     public float soundEffectsFloat { get; private set; }
+    public bool IsSoundEffectPlaying => soundEffectsAudio.isPlaying;
 
     private void Awake()
     {
@@ -50,8 +50,7 @@ public class AudioSettings : MonoBehaviour
 
     public void PlaySoundEffect(AudioClip audioClip)
     {
-        if(soundEffectsAudio.isPlaying && soundEffectsAudio.clip == audioClip) return;
-        soundEffectsAudio.clip = audioClip;
-        soundEffectsAudio.Play();
+        if(audioClip == null) return;
+        soundEffectsAudio.PlayOneShot(audioClip);
     }
 }

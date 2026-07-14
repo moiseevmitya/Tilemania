@@ -1,42 +1,46 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class EndGameMenu : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI bestScore;
-    [SerializeField] TextMeshProUGUI currentScore;
-    [SerializeField] AudioClip endGameMusic;
-    GameSession gameSession;
+    [SerializeField] private TextMeshProUGUI bestScore;
+    [SerializeField] private TextMeshProUGUI currentScore;
+    [SerializeField] private AudioClip endGameMusic;
     
     void Start()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 1f;
+        CursorController.Show();
         
-        gameSession = FindAnyObjectByType<GameSession>();
+
+        int currentPlayerScore = 0;
+        int bestPlayerScore = PlayerPrefs.GetInt(PrefsKeys.BestPlayerScore, 0);
+
+        GameSession gameSession = FindAnyObjectByType<GameSession>();
+
         if(gameSession != null)
         {
-            int bestPlayerScore = PlayerPrefs.GetInt(PrefsKeys.BestPlayerScore, 0);
-            int currentPlayerScore = gameSession.GetPlayerScore();
+            currentPlayerScore = gameSession.GetPlayerScore();
 
             // проверка на лучший счет
             if(currentPlayerScore > bestPlayerScore)
             {
-                PlayerPrefs.SetInt(PrefsKeys.BestPlayerScore, currentPlayerScore);
                 bestPlayerScore = currentPlayerScore;
+                PlayerPrefs.SetInt(PrefsKeys.BestPlayerScore, bestPlayerScore);
+
+                PlayerPrefs.Save();
             }
 
-            bestScore.text = bestPlayerScore.ToString();
-            currentScore.text = currentPlayerScore.ToString();
+            // очищаем игровую сессию
+            Destroy(gameSession.gameObject);
         }
 
-        // очищаем игровую сессию
-        Destroy(gameSession.gameObject);
+        bestScore.text = bestPlayerScore.ToString();
+        currentScore.text = currentPlayerScore.ToString();
 
         // Замена трека на финальную музыку
-        AudioSettings.instance.SetAndPlayMusic(endGameMusic);
+        AudioSettings.instance?.SetAndPlayMusic(endGameMusic);
     }
 
     public void BackToMainMenu()
